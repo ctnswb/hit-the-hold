@@ -1,0 +1,10 @@
+.hold {
+    background-color: black;
+    border-radius: 50%;
+    color: white;
+    font: bold;
+    font-size: 25px;
+    padding: 5px 12px 5px 12px;
+    text-align: center;
+    position: absolute;
+}
