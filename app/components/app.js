@@ -9,6 +9,7 @@ angular.module('randori')
     this.unformattedTime = 0;
     this.touchCount = 0;
     this.state = "newRound";
+    this.count = 4;
 
     this.inputClimber = function() {
       for (var i = 0 ; i < this.holds.length ; i++) {
@@ -16,8 +17,16 @@ angular.module('randori')
       }
     }
 
-    this.countDown = function () {
-
+    this.startCountdown = function () {
+      this.countdown = $interval((function(){
+        if (this.count === 1) {
+          $interval.cancel(this.countdown);
+          this.startTimer();
+          this.state = "playing";
+        } else {
+          this.count--;
+        }
+      }).bind(this), 1000);
     }
 
     this.startTimer = function () {
@@ -42,9 +51,11 @@ angular.module('randori')
         }
       } else if (this.state === "waiting") {
         if ($event.keyCode === 32) {
-          this.startTimer();
-          this.state = "playing";
+          this.startCountdown();
+          this.state = "countdown";
         }
+      } else if (this.state === "countdown") {
+
       } else if (this.state === "playing") {
         if ($event.keyCode === 32) {
           this.touchCount++;
@@ -63,6 +74,7 @@ angular.module('randori')
       this.climber = '';
       this.touchCount = 0;
       this.state = "newRound";
+      this.count = 4;
     }
 
     window.onkeypress = this.keypress.bind(this);

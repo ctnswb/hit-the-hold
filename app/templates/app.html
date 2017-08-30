@@ -1,11 +1,13 @@
 <div>
-  <H1 ng-show='$ctrl.state==="playing" || $ctrl.state==="waiting"'>HIT THE HOLDS IN ORDER ...{{$ctrl.climber}}!</H1>
+  <H1 ng-show='$ctrl.state==="playing" || $ctrl.state==="waiting" || $ctrl.state==="countdown"'>HIT THE HOLDS IN ORDER ...{{$ctrl.climber}}!</H1>
   <H1 ng-show='$ctrl.state==="done"'>GOOD JOB {{$ctrl.climber}}!</H1>
-
   <h2>
     <name-input ng-show='$ctrl.state==="newRound"') climber=$ctrl.climber></name-input>
     <timer ng-show='$ctrl.state!=="newRound"' time=$ctrl.time></timer>
   </h2>
+  <h3 ng-show='$ctrl.state==="waiting"'>[Hit the space bar to start!]</h3>
+
+  <countdown ng-show='$ctrl.state==="countdown"' count=$ctrl.count></countdown>
 
   <hold-list holds="$ctrl.holds"><h5><em>holdList</em> component goes here</h5></hold-list>
   <score-list ng-show='$ctrl.state==="done"' scores="$ctrl.scores"><h5><em>scoreList</em> component goes here</h5></score-list>
