@@ -10,6 +10,7 @@ angular.module('randori')
     this.touchCount = 0;
     this.state = "newRound";
     this.count = 4;
+    this.movingHolds = false;
 
     this.inputClimber = function() {
       for (var i = 0 ; i < this.holds.length ; i++) {
@@ -40,7 +41,8 @@ angular.module('randori')
 
     this.end = function () {
       $interval.cancel(this.timer);
-      this.scores.push({name: this.climber, time: this.time});
+      this.scores.push([this.time, this.climber]);
+      this.scores.sort();
     };
 
     this.keypress = function ($event) {
@@ -50,11 +52,36 @@ angular.module('randori')
           $scope.$apply(this.state = "waiting");
         }
       } else if (this.state === "waiting") {
-        if ($event.keyCode === 32) {
+        if ($event.keyCode === 109) {
+          $scope.$apply(this.movingHolds = true);
+          angular.element('.hold').mousedown(function(event) {
+            var node = $(this);
+            var position = node.offset();
+            var initialized = {
+              x : position.left - event.pageX,
+              y : position.top - event.pageY
+            };
+            var handlers = {
+              mousemove : function(e){
+                node.css({
+                  left : ( initialized.x + e.pageX ) + 'px',
+                  top : ( initialized.y + e.pageY ) + 'px'
+                });
+              },
+              mouseup : function(e){
+                $(this).off(handlers);
+              }
+            }
+            angular.element(document).on(handlers);
+          });
+        } else if ($event.keyCode === 32) {
           this.startCountdown();
           this.state = "countdown";
+        } else if ($event.keyCode === 115) {
+          angular.element('.hold').off('mousedown');
+          $scope.$apply(this.movingHolds = false);
         }
-      } else if (this.state === "countdown") {
+
 
       } else if (this.state === "playing") {
         if ($event.keyCode === 32) {

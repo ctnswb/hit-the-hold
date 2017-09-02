@@ -9,6 +9,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/app", express.static(path.join(__dirname, '/app')));
 app.use("/styles", express.static(path.join(__dirname, '/styles')));
+app.use("/lib", express.static(path.join(__dirname, '/lib')));
 app.use("/node_modules", express.static(path.join(__dirname, '/node_modules')));
 
 app.get('/', function(req, res) {
