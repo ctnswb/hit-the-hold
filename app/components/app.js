@@ -12,6 +12,17 @@ angular.module('randori')
     this.count = 4;
     this.movingHolds = false;
 
+    this.countDownSounds = [];
+    for (var i = 0; i < 4 ; i++) {
+      this.countDownSounds.push(new Audio('lib/countdown.mp3'));
+    }
+    this.startSound = new Audio('lib/start.mp3');
+    this.hitSounds = [];
+        for (var i = 0; i < 5 ; i++) {
+      this.hitSounds.push(new Audio('lib/Bottle.mp3'));
+    }
+    this.endSound = new Audio('lib/Submarine.mp3');
+
     this.inputClimber = function() {
       for (var i = 0 ; i < this.holds.length ; i++) {
         this.holds[i].show = true;
@@ -24,8 +35,10 @@ angular.module('randori')
           $interval.cancel(this.countdown);
           this.startTimer();
           this.state = "playing";
+          this.startSound.play();
         } else {
           this.count--;
+          this.countDownSounds[this.count].play();
         }
       }).bind(this), 1000);
     }
@@ -74,7 +87,7 @@ angular.module('randori')
             }
             angular.element(document).on(handlers);
           });
-        } else if ($event.keyCode === 32) {
+        } else if ($event.keyCode === 32 && !this.movingHolds) {
           this.startCountdown();
           this.state = "countdown";
         } else if ($event.keyCode === 115) {
@@ -85,10 +98,12 @@ angular.module('randori')
 
       } else if (this.state === "playing") {
         if ($event.keyCode === 32) {
+          this.hitSounds[this.touchCount].play();
           this.touchCount++;
           $scope.$apply(this.holds[this.touchCount - 1].show = false);
           if (this.touchCount >= this.holds.length) {
             this.end();
+            this.endSound.play();
             $scope.$apply(this.state = "done");
           }
         }
